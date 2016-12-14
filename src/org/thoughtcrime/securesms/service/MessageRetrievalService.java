@@ -7,6 +7,9 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.dependencies.InjectableType;
 import org.thoughtcrime.securesms.gcm.GcmBroadcastReceiver;
@@ -152,8 +155,10 @@ public class MessageRetrievalService extends Service implements Runnable, Inject
     Log.w(TAG, String.format("Network requirement: %s, active activities: %s, push pending: %s",
                              networkRequirement.isPresent(), activeActivities, pushPending.size()));
 
+    boolean isPlayServicesMissing = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == ConnectionResult.SERVICE_MISSING;
+
     return TextSecurePreferences.isWebsocketRegistered(this) &&
-           (activeActivities > 0 || !pushPending.isEmpty())  &&
+           (activeActivities > 0 || !pushPending.isEmpty() || isPlayServicesMissing) &&
            networkRequirement.isPresent();
   }
 
