@@ -17,6 +17,8 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.thoughtcrime.redphone.signaling.RedPhoneAccountManager;
@@ -206,7 +208,9 @@ public class AdvancedPreferenceFragment extends PreferenceFragment {
             Log.w(TAG, e);
           }
 
-          GoogleCloudMessaging.getInstance(context).unregister();
+          if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) != ConnectionResult.SERVICE_MISSING) {
+            GoogleCloudMessaging.getInstance(context).unregister();
+          }
 
           return SUCCESS;
         } catch (IOException ioe) {

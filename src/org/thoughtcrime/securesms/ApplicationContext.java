@@ -24,6 +24,8 @@ import android.os.StrictMode.VmPolicy;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.security.ProviderInstaller;
 
 import org.thoughtcrime.securesms.crypto.PRNGFixes;
@@ -144,6 +146,7 @@ public class ApplicationContext extends MultiDexApplication implements Dependenc
 
   private void initializeGcmCheck() {
     if (TextSecurePreferences.isPushRegistered(this) &&
+        GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) != ConnectionResult.SERVICE_MISSING &&
         TextSecurePreferences.getGcmRegistrationId(this) == null)
     {
       this.jobManager.add(new GcmRefreshJob(this));
